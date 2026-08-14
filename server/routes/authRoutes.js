@@ -109,7 +109,7 @@ router.post('/api/logout', (req, res) => {
 })
 
 // GET /api/auth/me
-router.get('/api/me', userAuth, async (req, res) => {
+router.get('/me', userAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
     if (!user) return res.status(404).json({ authenticated: false })

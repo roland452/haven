@@ -63,7 +63,7 @@ router.get('/api/:id', async (req, res) => {
 })
 
 // POST /api/posts
-router.post('/posts', userAuth, async (req, res) => {
+router.post('/api/posts', userAuth, async (req, res) => {
   
   try {
     const {
@@ -110,7 +110,7 @@ router.post('/posts', userAuth, async (req, res) => {
 })
 
 // POST /api/posts/:id/donate
-router.post('/posts/:id/donate', userAuth, async (req, res) => {
+router.post('/api/posts/:id/donate', userAuth, async (req, res) => {
   try {
     const { amount } = req.body
     if (!amount || amount <= 0) {
