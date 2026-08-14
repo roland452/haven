@@ -32,8 +32,14 @@ export default function Header({
               <span className="hidden sm:flex items-center gap-1.5 text-parchment/60 text-sm font-body">
                 <UserIcon size={14} />
                 {currentUser.name}
-                <span className="text-parchment/30 font-mono text-xs capitalize">
-                  &middot; {currentUser.role}
+                <span
+                  className={`text-[10px] font-mono uppercase tracking-wide px-2 py-0.5 rounded-full border ${
+                    currentUser.role === 'institution'
+                      ? 'text-sage bg-sage/10 border-sage/25'
+                      : 'text-brass bg-brass/10 border-brass/25'
+                  }`}
+                >
+                  {currentUser.role}
                 </span>
               </span>
               <button
@@ -41,7 +47,7 @@ export default function Header({
                 className="flex items-center gap-1.5 text-parchment/50 hover:text-parchment text-sm font-body transition-colors"
               >
                 <LogOut size={14} />
-                Sign out 
+                Sign out
               </button>
             </div>
           ) : (

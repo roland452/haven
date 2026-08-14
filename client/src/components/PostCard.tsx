@@ -7,9 +7,21 @@ interface Props {
   onOpen: (id: string) => void
 }
 
+const CONGREGATION_STYLE = {
+  mosque: {
+    icon: Landmark,
+    badge: 'text-sage bg-sage/10 border-sage/25',
+  },
+  church: {
+    icon: Church,
+    badge: 'text-clay bg-clay/10 border-clay/25',
+  },
+} as const
+
 export default function PostCard({ post, onOpen }: Props) {
   const pct = Math.min(100, Math.round((post.amountRaised / post.amountNeeded) * 100))
   const fulfilled = pct >= 100
+  const { icon: CongregationIcon, badge } = CONGREGATION_STYLE[post.congregation]
 
   return (
     <button
@@ -17,8 +29,10 @@ export default function PostCard({ post, onOpen }: Props) {
       className="animate-fade-up text-left bg-nightblue border border-brass/15 rounded-2xl p-6 flex flex-col gap-4 hover:border-brass/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brass"
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wide text-sage bg-sage/10 border border-sage/25 px-2.5 py-1 rounded-full">
-          {post.congregation === 'mosque' ? <Landmark size={12} /> : <Church size={12} />}
+        <span
+          className={`inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wide px-2.5 py-1 rounded-full border ${badge}`}
+        >
+          <CongregationIcon size={12} />
           {post.institutionName}
         </span>
         <span className="text-xs font-mono text-parchment/40">{timeAgo(post.createdAt)}</span>
@@ -48,9 +62,15 @@ export default function PostCard({ post, onOpen }: Props) {
           />
         </div>
         <div className="flex items-center justify-between mt-3">
-          <span className="text-[11px] font-mono uppercase tracking-wide text-parchment/35">
-            {CATEGORY_LABEL[post.category]}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono uppercase tracking-wide text-parchment/35">
+              {CATEGORY_LABEL[post.category]}
+            </span>
+            <span className="text-parchment/15">&middot;</span>
+            <span className="text-[11px] font-mono uppercase tracking-wide text-sage">
+              Institution
+            </span>
+          </div>
           {fulfilled && (
             <span className="text-[11px] font-mono uppercase tracking-wide text-sage">
               Fulfilled

@@ -13,10 +13,10 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [desc, setDesc] = useState('')
-  const [founder, setFounder] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState<UserRole>('donor')
+  const [institutionDescription, setInstitutionDescription] = useState('')
+  const [founderName, setFounderName] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
 
@@ -27,7 +27,17 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
     setBusy(true)
     setError('')
     const result =
-      mode === 'login' ? await login(email, password) : await signup(name, email, password, role, founder, desc)
+      mode === 'login'
+        ? await login(email, password)
+        : await signup(
+            name,
+            email,
+            password,
+            role,
+            role === 'institution'
+              ? { institutionDescription, founderName }
+              : undefined
+          )
     setBusy(false)
     if (result) {
       setError(result)
@@ -43,9 +53,9 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="animate-fade-up bg-nightblue border border-brass/20 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-sm"
+        className="animate-fade-up bg-nightblue border border-brass/20 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-sm max-h-[92vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-brass/10">
+        <div className="sticky top-0 bg-nightblue flex items-center justify-between px-6 py-4 border-b border-brass/10">
           <h2 className="font-display text-parchment text-lg font-semibold flex items-center gap-2">
             {mode === 'login' ? <LogIn size={18} className="text-brass" /> : <UserPlus size={18} className="text-brass" />}
             {mode === 'login' ? 'Sign in' : 'Create an account'}
@@ -64,29 +74,10 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
             <>
               <input
                 className={inputCls}
-                placeholder={role === 'donor'? 'Donor full name' : 'Institution name'}
+                placeholder={role === 'institution' ? 'Institution name' : 'Full name'}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-
-              
-             {role !== 'donor' && (
-              <>
-                <input
-                  className={inputCls}
-                  placeholder='Founder name'
-                  value={founder}
-                  onChange={(e) => setFounder(e.target.value)}
-                />
-                <textarea
-                  className={inputCls}
-                  placeholder="About institution"
-                  value={desc}
-                  onChange={(e) => setDesc(e.target.value)}
-                />
-              </>
-             
-             )}
               <div className="flex bg-ink rounded-full p-1 w-fit">
                 {(['donor', 'institution'] as UserRole[]).map((r) => (
                   <button
@@ -94,13 +85,35 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
                     type="button"
                     onClick={() => setRole(r)}
                     className={`px-4 py-1.5 rounded-full text-sm font-body capitalize transition-colors ${
-                      role === r ? 'bg-brass text-ink font-semibold' : 'text-parchment/50'
+                      role === r
+                        ? r === 'institution'
+                          ? 'bg-sage text-ink font-semibold'
+                          : 'bg-brass text-ink font-semibold'
+                        : 'text-parchment/50'
                     }`}
                   >
                     {r}
                   </button>
                 ))}
               </div>
+
+              {role === 'institution' && (
+                <>
+                  <input
+                    className={inputCls}
+                    placeholder="Founder's name"
+                    value={founderName}
+                    onChange={(e) => setFounderName(e.target.value)}
+                  />
+                  <textarea
+                    className={`${inputCls} resize-none`}
+                    placeholder="Briefly describe the institution — who you serve and how"
+                    rows={3}
+                    value={institutionDescription}
+                    onChange={(e) => setInstitutionDescription(e.target.value)}
+                  />
+                </>
+              )}
             </>
           )}
 
@@ -140,10 +153,6 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
             {mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
           </button>
 
-          <p className="text-[11px] text-parchment/30 font-body leading-relaxed border-t border-brass/10 pt-4">
-            Demo auth: passwords are hashed with SHA-256 and stored only in this browser's
-            localStorage. Not real security — don't reuse a real password here.
-          </p>
         </div>
       </div>
     </div>

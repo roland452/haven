@@ -23,16 +23,15 @@ const userSchema = new mongoose.Schema(
       enum: ['donor', 'institution'],
       required: true,
     },
-    founder: {
+    // Only present when role === 'institution'
+    institutionDescription: {
       type: String,
-      required: true, 
-      default: null
+      trim: true,
     },
-    desc: {
+    founderName: {
       type: String,
-      required: true, 
-      default: null
-    }
+      trim: true,
+    },
   },
   { timestamps: true }
 )

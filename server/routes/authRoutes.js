@@ -14,7 +14,7 @@ const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000 // keep in sync with TOKEN_TTL abov
 const COOKIE_OPTIONS = {
   httpOnly: true,
   sameSite: 'none',
-  secure: 'true',
+  secure: true,
   maxAge: TOKEN_TTL_MS,
 }
 
@@ -27,13 +27,23 @@ function signToken(user) {
 }
 
 function toPublic(user) {
-  return { id: user._id, name: user.name, email: user.email, role: user.role }
+  const base = { id: user._id, name: user.name, email: user.email, role: user.role }
+  if (user.role === 'institution') {
+    return {
+      ...base,
+      institutionDescription: user.institutionDescription,
+      founderName: user.founderName,
+    }
+  }
+  return base
 }
 
 // POST /api/auth/signup
 router.post('/api/signup', async (req, res) => {
+  console.log(req.body,'kjhkjhkjhk');
+  
   try {
-    const { name, email, password, role } = req.body
+    const { name, email, password, role, institutionDescription, founderName } = req.body
 
     if (!name?.trim() || !email?.trim() || !password || password.length < 6) {
       return res
@@ -42,6 +52,11 @@ router.post('/api/signup', async (req, res) => {
     }
     if (!['donor', 'institution'].includes(role)) {
       return res.status(400).json({ message: 'Invalid role.' })
+    }
+    if (role === 'institution' && (!institutionDescription?.trim() || !founderName?.trim())) {
+      return res.status(400).json({
+        message: 'Please fill in the founder name and a short description.',
+      })
     }
 
     const normalizedEmail = email.trim().toLowerCase()
@@ -58,6 +73,10 @@ router.post('/api/signup', async (req, res) => {
       email: normalizedEmail,
       passwordHash,
       role,
+      ...(role === 'institution' && {
+        institutionDescription: institutionDescription.trim(),
+        founderName: founderName.trim(),
+      }),
     })
 
     const token = signToken(user)
@@ -65,6 +84,8 @@ router.post('/api/signup', async (req, res) => {
     res.status(201).json({ user: toPublic(user) })
   } catch (error) {
     res.status(500).json({ message: 'Could not create account.' })
+    console.log(error);
+    
   }
 })
 
@@ -114,4 +135,3 @@ router.get('/api/me', userAuth, async (req, res) => {
 })
 
 export default router
-

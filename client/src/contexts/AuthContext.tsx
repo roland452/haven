@@ -29,7 +29,16 @@ function cacheUser(user: PublicUser | null) {
 interface AuthContextValue {
   currentUser: PublicUser | null
   authLoading: boolean
-  signup: (name: string, email: string, password: string, role: UserRole, founder: string, desc: string) => Promise<string | null>
+  signup: (
+    name: string,
+    email: string,
+    password: string,
+    role: UserRole,
+    institutionDetails?: {
+      institutionDescription: string
+      founderName: string
+    }
+  ) => Promise<string | null>
   login: (email: string, password: string) => Promise<string | null>
   logout: () => void
 }
@@ -63,13 +72,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
     role: UserRole,
-    founder: string,
-    desc: string
+    institutionDetails?: {
+      institutionDescription: string
+      founderName: string
+    }
   ): Promise<string | null> {
     if (!name.trim() || !email.trim() || password.length < 6) {
       return 'Please fill in every field. Passwords need at least 6 characters.'
     }
-    const { user, error } = await apiSignup(name, email, password, role, founder, desc)
+    if (
+      role === 'institution' &&
+      (!institutionDetails?.institutionDescription.trim() ||
+        !institutionDetails?.founderName.trim())
+    ) {
+      return 'Please fill in the founder name and a short description.'
+    }
+    const { user, error } = await apiSignup(name, email, password, role, institutionDetails)
     if (error || !user) return error || 'Could not create account.'
     setCurrentUser(user)
     cacheUser(user)

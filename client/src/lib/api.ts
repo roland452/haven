@@ -8,8 +8,8 @@ import {
   UserRole,
 } from '../types'
 
-const API_URL = 'https://haven-2gdm.onrender.com/api'
 // Point this at your server, e.g. VITE_API_URL=http://localhost:5000/api in .env
+const API_URL = 'https://haven-2gdm.onrender.com/api';
 export const api = axios.create({
   baseURL: API_URL || 'http://localhost:5000/api',
   withCredentials: true, // required so the userToken cookie is sent/received
@@ -28,15 +28,26 @@ export async function apiSignup(
   name: string,
   email: string,
   password: string,
-  role: UserRole, 
-  founder: string,
-  desc: string
+  role: UserRole,
+  institutionDetails?: {
+    institutionDescription: string
+    founderName: string
+  }
 ): Promise<{ user?: PublicUser; error?: string }> {
   try {
-    const { data } = await api.post('/signup', { name, email, password, role, founder, desc })
+    const { data } = await api.post('/signup', {
+      name,
+      email,
+      password,
+      role,
+      ...institutionDetails,
+    })
+    console.log(data);
     return { user: data.user }
   } catch (error) {
+    
     return { error: errorMessage(error, 'Could not create account.') }
+    
   }
 }
 
@@ -75,9 +86,15 @@ export async function apiFetchPosts(
   congregation: Congregation | 'all',
   category: NeedCategory | 'all'
 ): Promise<NeedPost[]> {
-  const { data } = await api.get('/', { params: { congregation, category } })
-  return data.posts
+  try {
+    const { data } = await api.get('/', { params: { congregation, category } })
+    return Array.isArray(data.posts) ? data.posts : []
+  } catch (error) {
+    console.error('Could not load posts:', error)
+    return []
+  }
 }
+
 
 export async function apiCreatePost(draft: DraftNeedPost): Promise<NeedPost> {
   const { data } = await api.post('/posts', draft)

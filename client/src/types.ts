@@ -40,8 +40,9 @@ export interface PublicUser {
   name: string
   email: string
   role: UserRole
-  founder?: string,
-  desc?: string
+  // Only present when role === 'institution'
+  institutionDescription?: string
+  founderName?: string
 }
 
 export interface DraftNeedPost {
