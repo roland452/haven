@@ -13,6 +13,8 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [desc, setDesc] = useState('')
+  const [founder, setFounder] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState<UserRole>('donor')
   const [error, setError] = useState('')
@@ -25,7 +27,7 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
     setBusy(true)
     setError('')
     const result =
-      mode === 'login' ? await login(email, password) : await signup(name, email, password, role)
+      mode === 'login' ? await login(email, password) : await signup(name, email, password, role, founder, desc)
     setBusy(false)
     if (result) {
       setError(result)
@@ -62,10 +64,29 @@ export default function AuthModal({ onClose, onSuccess }: Props) {
             <>
               <input
                 className={inputCls}
-                placeholder="Full name"
+                placeholder={role === 'donor'? 'Donor full name' : 'Institution name'}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+
+              
+             {role !== 'donor' && (
+              <>
+                <input
+                  className={inputCls}
+                  placeholder='Founder name'
+                  value={founder}
+                  onChange={(e) => setFounder(e.target.value)}
+                />
+                <textarea
+                  className={inputCls}
+                  placeholder="About institution"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              </>
+             
+             )}
               <div className="flex bg-ink rounded-full p-1 w-fit">
                 {(['donor', 'institution'] as UserRole[]).map((r) => (
                   <button

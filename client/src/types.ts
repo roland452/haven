@@ -40,6 +40,8 @@ export interface PublicUser {
   name: string
   email: string
   role: UserRole
+  founder?: string,
+  desc?: string
 }
 
 export interface DraftNeedPost {

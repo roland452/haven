@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema(
       enum: ['donor', 'institution'],
       required: true,
     },
+    founder: {
+      type: String,
+      required: true, 
+      default: null
+    },
+    desc: {
+      type: String,
+      required: true, 
+      default: null
+    }
   },
   { timestamps: true }
 )

@@ -28,10 +28,12 @@ export async function apiSignup(
   name: string,
   email: string,
   password: string,
-  role: UserRole
+  role: UserRole, 
+  founder: string,
+  desc: string
 ): Promise<{ user?: PublicUser; error?: string }> {
   try {
-    const { data } = await api.post('/signup', { name, email, password, role })
+    const { data } = await api.post('/signup', { name, email, password, role, founder, desc })
     return { user: data.user }
   } catch (error) {
     return { error: errorMessage(error, 'Could not create account.') }
