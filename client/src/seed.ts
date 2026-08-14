@@ -1,4 +1,3 @@
-import { NeedPost } from './types'
 
 export const CATEGORY_LABEL: Record<string, string> = {
   medical: 'Medical care',
