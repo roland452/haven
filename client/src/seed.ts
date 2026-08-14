@@ -1,4 +1,3 @@
-
 export const CATEGORY_LABEL: Record<string, string> = {
   medical: 'Medical care',
   housing: 'Housing & rent',
@@ -24,7 +23,4 @@ export function timeAgo(iso: string): string {
   if (days < 30) return `${days} days ago`
   const months = Math.floor(days / 30)
   return `${months} month${months > 1 ? 's' : ''} ago`
-
 }
-
-
