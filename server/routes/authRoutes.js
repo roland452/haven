@@ -13,13 +13,7 @@ const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000 // keep in sync with TOKEN_TTL abov
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  sameSite: 'lax',
-  // Only mark the cookie "secure" when you're actually serving over HTTPS.
-  // If NODE_ENV ends up set to "production" while still running on plain
-  // http (e.g. locally), the browser silently drops the cookie on every
-  // response — which looks exactly like being logged out on every donate/
-  // create-post click, since those requests have no cookie to prove who
-  // you are. Set COOKIE_SECURE=true explicitly once you deploy behind HTTPS.
+  sameSite: 'none',
   secure: 'true',
   maxAge: TOKEN_TTL_MS,
 }
@@ -109,7 +103,7 @@ router.post('/api/logout', (req, res) => {
 })
 
 // GET /api/auth/me
-router.get('/me', userAuth, async (req, res) => {
+router.get('/api/me', userAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
     if (!user) return res.status(404).json({ authenticated: false })
