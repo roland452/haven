@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ['donor', 'institution'],
+      default:'anonymous',
       required: true,
     },
     // Only present when role === 'institution'

@@ -101,6 +101,7 @@ router.post('/api/posts', userAuth, async (req, res) => {
       amountNeeded,
       contact: { phone, neighborhood, city },
       postedBy: req.user.id,
+      role: req.user.role
     })
 
     res.status(201).json({ post: toPublicPost(post, req.user.id) })

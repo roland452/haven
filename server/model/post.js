@@ -64,6 +64,10 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    role: {
+      type: String,
+      enum: ['donor', 'institution'],
+    },
     // users who have already had the full phone number revealed to them
     revealedTo: [
       {

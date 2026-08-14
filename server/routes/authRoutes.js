@@ -40,7 +40,6 @@ function toPublic(user) {
 
 // POST /api/auth/signup
 router.post('/api/signup', async (req, res) => {
-  console.log(req.body,'kjhkjhkjhk');
   
   try {
     const { name, email, password, role, institutionDescription, founderName } = req.body
