@@ -29,6 +29,7 @@ function toPublicPost(post, viewerId) {
       city: obj.contact.city,
       phone: revealed ? obj.contact.phone : maskPhone(obj.contact.phone),
     },
+    role: obj.role,
     contactRequests: obj.contactRequests,
     contactRevealed: revealed,
     postedBy: obj.postedBy,
