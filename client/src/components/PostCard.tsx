@@ -68,7 +68,7 @@ export default function PostCard({ post, onOpen }: Props) {
             </span>
             <span className="text-parchment/15">&middot;</span>
             <span className="text-[11px] font-mono uppercase tracking-wide text-sage">
-              Institution
+              {post.role || 'anonymous'} 
             </span>
           </div>
           {fulfilled && (

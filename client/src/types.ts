@@ -28,6 +28,7 @@ export interface NeedPost {
   contact: ContactInfo
   createdAt: string
   contactRequests: number
+  role: string
   /** Whether the current viewer has already been sent the full phone number. */
   contactRevealed: boolean
   postedBy: string
