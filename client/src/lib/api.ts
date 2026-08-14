@@ -10,7 +10,7 @@ import {
 
 // Point this at your server, e.g. VITE_API_URL=http://localhost:5000/api in .env
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   withCredentials: true, // required so the userToken cookie is sent/received
 })
 
