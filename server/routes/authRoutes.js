@@ -20,7 +20,7 @@ const COOKIE_OPTIONS = {
   // response — which looks exactly like being logged out on every donate/
   // create-post click, since those requests have no cookie to prove who
   // you are. Set COOKIE_SECURE=true explicitly once you deploy behind HTTPS.
-  secure: 'false',
+  secure: 'true',
   maxAge: TOKEN_TTL_MS,
 }
 
