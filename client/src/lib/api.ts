@@ -8,7 +8,7 @@ import {
   UserRole,
 } from '../types'
 
-const API_URL = 'https://haven-2gdm.onrender.com'
+const API_URL = 'https://haven-2gdm.onrender.com/api'
 // Point this at your server, e.g. VITE_API_URL=http://localhost:5000/api in .env
 export const api = axios.create({
   baseURL: API_URL || 'http://localhost:5000/api',
